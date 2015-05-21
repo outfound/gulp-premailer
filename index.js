@@ -17,6 +17,12 @@ module.exports = function (opts) {
 	}
 
 	var stream = through.obj(function (file, enc, done) {
+
+		var self = this;
+		var errors = '';
+		var bufferObjs = [];
+		var args = [];
+
 		if (file.isNull()) {
 			self.push(file);
 			return done();
@@ -28,11 +34,6 @@ module.exports = function (opts) {
 		}
 
 		file.contents = new Buffer(file.contents.toString());
-
-		var self = this;
-		var errors = '';
-		var bufferObjs = [];
-		var args = [file.path];
 
 		// Convert JS object to CLI args.. i.e. query-string: foo to
 		// --query-string=foo
@@ -114,7 +115,13 @@ module.exports = function (opts) {
 			self.push(file);
 			done();
 		});
+
+		cp.stdin.write(file.contents, function () {
+			cp.stdin.end()
+		});
+
 	});
 
 	return stream;
 };
+
