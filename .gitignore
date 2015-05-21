@@ -8,3 +8,4 @@ node_modules/*
 fixtures/results/*
 gulp-premailer.sublime-project
 gulp-premailer.sublime-workspace
+.idea
